@@ -63,6 +63,7 @@ app.get('/health', (req, res) => {
 // ================================
 app.post("/users/register", validateUserRegistration, usersController.registerNewUsers);
 app.post("/users/login", validateUserLogin, usersController.login);
+app.get("/users/verify", authenticateUser, usersController.verifyToken);
 
 // ================================
 // USER ROUTES (Protected)

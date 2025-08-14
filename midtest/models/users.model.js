@@ -1,10 +1,17 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     userName: { 
         type: String, 
         required: true,
         unique: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 30
+    },
+    username: { 
+        type: String, 
         trim: true,
         minlength: 3,
         maxlength: 30
@@ -31,16 +38,23 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    fullName: {
+        type: String,
+        trim: true,
+        maxlength: 100
+    },
+    phone: {
+        type: String,
+        trim: true,
+        maxlength: 20
+    },
+    dateOfBirth: {
+        type: Date
+    },
     // User favorites và watch history
     favorites: [{
-        movieId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Movies'
-        },
-        addedAt: {
-            type: Date,
-            default: Date.now
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Movies'
     }],
     watchHistory: [{
         movieId: {
@@ -72,10 +86,23 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Index để tối ưu query (bỏ email index vì đã có unique: true)
 userSchema.index({ role: 1 });
-userSchema.index({ 'favorites.movieId': 1 });
+userSchema.index({ favorites: 1 });
 userSchema.index({ 'watchHistory.movieId': 1 });
+
+// Hash password trước khi save
+userSchema.pre('save', async function(next) {
+    // Chỉ hash nếu password được modified
+    if (!this.isModified('password')) return next();
+    
+    try {
+        // Hash password
+        this.password = await bcrypt.hash(this.password, 12);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
 const UserModel = mongoose.model("users", userSchema);
 export default UserModel;

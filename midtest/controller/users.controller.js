@@ -114,6 +114,32 @@ const usersController = {
         }
     },
 
+    // Verify token
+    verifyToken: async (req, res) => {
+        try {
+            const user = req.user;
+            
+            res.status(200).json({
+                success: true,
+                message: 'Token hợp lệ',
+                data: {
+                    id: user._id,
+                    userName: user.userName,
+                    email: user.email,
+                    role: user.role,
+                    isActive: user.isActive
+                }
+            });
+        } catch (error) {
+            console.error('Verify token error:', error);
+            res.status(500).json({
+                success: false,
+                message: "Lỗi khi xác thực token",
+                error: error.message
+            });
+        }
+    },
+
     // Logout
     logout: async (req, res) => {
         try {

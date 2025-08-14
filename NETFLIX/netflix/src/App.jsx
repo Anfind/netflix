@@ -5,6 +5,7 @@ import SignUp from './components/SignUp';
 import MovieList from './components/MovieList';
 import AdminDashboard from './components/AdminDashboard';
 import UserProfile from './components/UserProfile';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useState, useEffect } from 'react';
 
 function Home() {
@@ -92,7 +93,7 @@ function Home() {
   return (
     <div className="home">
       <header className='showcase'>
-        <div className="showcase-top">
+        <div className={`showcase-top ${isScrolled ? 'scrolled' : ''}`}>
           <img src='./NetflixLogo.png' 
                 alt="Netflix Logo"/>
           <button 
@@ -305,9 +306,21 @@ function App() {
             <SignUp />
           </div>
         } />
-        <Route path="/movies" element={<MovieList />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/movies" element={
+          <ProtectedRoute>
+            <MovieList />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute adminOnly={true}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );
