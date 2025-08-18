@@ -256,7 +256,7 @@ const usersController = {
 
             // Kiểm tra đã yêu thích chưa
             const alreadyFavorited = user.favorites.some(
-                fav => fav.movieId.toString() === movieId
+                favId => favId.toString() === movieId
             );
 
             if (alreadyFavorited) {
@@ -266,8 +266,8 @@ const usersController = {
                 });
             }
 
-            // Thêm vào favorites
-            user.favorites.push({ movieId });
+            // Thêm vào favorites (chỉ lưu ObjectId)
+            user.favorites.push(movieId);
             await user.save();
 
             // Cập nhật favorite_count của phim
@@ -299,7 +299,7 @@ const usersController = {
             // Xóa khỏi favorites
             const initialLength = user.favorites.length;
             user.favorites = user.favorites.filter(
-                fav => fav.movieId.toString() !== movieId
+                favId => favId.toString() !== movieId
             );
 
             if (user.favorites.length === initialLength) {
@@ -334,17 +334,9 @@ const usersController = {
     getFavorites: async (req, res) => {
         try {
             const user = await UserModel.findById(req.user._id)
-                .populate({
-                    path: 'favorites.movieId',
-                    select: 'title poster_path backdrop_path vote_average release_date genres overview'
-                });
+                .populate('favorites', 'title poster_path backdrop_path vote_average release_date genres overview');
 
-            const favorites = user.favorites
-                .filter(fav => fav.movieId) // Lọc các phim bị xóa
-                .map(fav => ({
-                    ...fav.movieId.toObject(),
-                    addedAt: fav.addedAt
-                }));
+            const favorites = user.favorites || [];
 
             res.status(200).json({
                 success: true,

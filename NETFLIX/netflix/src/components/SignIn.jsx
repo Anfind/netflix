@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setAuthData } from '../utils/auth';
 import Notification from './Notification';
+import API_BASE_URL from '../config/api';
 
 function SignIn() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ function SignIn() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:8080/users/login', {
+      const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email: formData.email.toLowerCase().trim(),
         password: formData.password
       });

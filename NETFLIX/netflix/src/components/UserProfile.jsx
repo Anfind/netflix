@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import './UserProfile.css';
 
 function UserProfile() {
@@ -82,14 +83,14 @@ function UserProfile() {
       console.log('Fetching user data with token:', apiKey);
       
       // Fetch user profile
-      const profileRes = await axios.get('http://localhost:8080/users/profile', {
+      const profileRes = await axios.get(`${API_BASE_URL}/users/profile`, {
         headers: { Authorization: `Bearer ${apiKey}` }
       });
       console.log('Profile data:', profileRes.data);
       setProfile(profileRes.data.data);
 
       // Fetch favorites
-      const favoritesRes = await axios.get('http://localhost:8080/users/favorites', {
+      const favoritesRes = await axios.get(`${API_BASE_URL}/users/favorites`, {
         headers: { Authorization: `Bearer ${apiKey}` }
       });
       console.log('Favorites data:', favoritesRes.data);
@@ -115,7 +116,7 @@ function UserProfile() {
     if (!confirm('Bạn có chắc muốn xóa khỏi danh sách yêu thích?')) return;
 
     try {
-      await axios.delete(`http://localhost:8080/users/favorites/${movieId}`, {
+      await axios.delete(`${API_BASE_URL}/users/favorites/${movieId}`, {
         headers: { Authorization: `Bearer ${apiKey}` }
       });
 

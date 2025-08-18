@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Notification from './Notification';
+import API_BASE_URL from '../config/api';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ function SignUp() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:8080/users/register', {
+      const response = await axios.post(`${API_BASE_URL}/users/register`, {
         userName: formData.userName.trim(),
         email: formData.email.toLowerCase().trim(),
         password: formData.password

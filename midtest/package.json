@@ -1,8 +1,11 @@
 {
-  "name": "midtest",
+  "name": "netflix-backend",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch server.js",
@@ -15,12 +18,12 @@
     "nodejs",
     "express",
     "mongodb",
-    "cinema",
-    "movies"
+    "netflix",
+    "streaming"
   ],
   "author": "",
   "license": "ISC",
-  "description": "Cinema Web MERN Stack Application",
+  "description": "Netflix Clone Backend API",
   "dependencies": {
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",

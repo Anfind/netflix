@@ -1,12 +1,19 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Models
 import UserModel from "../models/users.model.js";
 import moviesModel from "../models/movies.model.js";
 
-dotenv.config();
+// Get the directory name in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Configure dotenv to look for .env in parent directory
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 // Kết nối database
 const connectDB = async () => {

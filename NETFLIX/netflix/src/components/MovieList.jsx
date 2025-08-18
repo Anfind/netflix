@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
+import API_BASE_URL from '../config/api';
 import '../App.css';
 
   const CATEGORIES = [
@@ -54,7 +55,7 @@ function MovieList() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch('http://localhost:8080/movies');
+        const response = await fetch(`${API_BASE_URL}/movies`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -161,7 +162,7 @@ function MovieList() {
     }
 
     try {
-      await fetch(`http://localhost:8080/users/favorites/${movie._id}`, {
+      await fetch(`${API_BASE_URL}/users/favorites/${movie._id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -435,7 +436,7 @@ function MovieList() {
             minHeight: '100vh',
             animation: 'fadeIn 0.4s ease'
           }}>
-            {showVideo && selectedMovie.video_url ? (
+            {showVideo && (selectedMovie.video_url || selectedMovie.trailer_url) ? (
               <div style={{
                 width: '100%',
                 height: '100vh',
@@ -448,9 +449,10 @@ function MovieList() {
                 <iframe
                   width="100%"
                   height="100%"
-                  src={selectedMovie.video_url}
+                  src={`${selectedMovie.video_url || selectedMovie.trailer_url}?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1`}
                   frameBorder="0"
                   allowFullScreen
+                  allow="autoplay; encrypted-media"
                   title={selectedMovie.title}
                   style={{
                     border: 'none',
@@ -606,7 +608,7 @@ function MovieList() {
                           justifyContent: 'center',
                           transition: 'all 0.3s ease',
                           boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
-                          opacity: selectedMovie.video_url ? 1 : 0.7
+                          opacity: 1
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.transform = 'scale(1.05) translateY(-2px)';
@@ -616,8 +618,13 @@ function MovieList() {
                           e.target.style.transform = 'scale(1) translateY(0px)';
                           e.target.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
                         }}
-                        onClick={() => setShowVideo(true)}
-                        disabled={!selectedMovie.video_url}
+                        onClick={() => {
+                          if (selectedMovie.video_url || selectedMovie.trailer_url) {
+                            setShowVideo(true);
+                          } else {
+                            alert('Video trailer chưa có sẵn cho phim này!');
+                          }
+                        }}
                       >
                         ▶ Phát ngay
                       </button>
