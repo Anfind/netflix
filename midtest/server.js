@@ -50,7 +50,9 @@ const corsOptions = {
     origin: [
         'http://localhost:5173',
         'http://localhost:3000',
-        'https://netflix-clone-fe.vercel.app', // Tạm thời, sẽ cập nhật sau
+        'https://netflix-clone-fe-2025.vercel.app',
+        'https://netflix-frontend-anfind.vercel.app',
+        'https://my-netflix-clone.vercel.app',
         /\.vercel\.app$/ // Cho phép tất cả subdomain của vercel
     ],
     credentials: true,
